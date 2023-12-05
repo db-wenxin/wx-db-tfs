@@ -1,0 +1,5 @@
+databricks_account_id = ""
+workspace_url         = ""
+pat_token             = ""
+s3_bucket_name        = ""
+iam_role_name         = ""
