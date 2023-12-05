@@ -1,4 +1,9 @@
-// Account level setup
+// NOTE: The practice of passing credentials through Terraform is intended solely for rapid testing purposes. 
+// It should NOT be implemented in Production or any other higher-level environments.
+// For enhanced security, it is recommended to use more secure methods like AWS Secret Manager or environment-specific secrets for storing credentials.
+client_id     = ""
+client_secret = ""
+
 create_new_vpc            = true
 aws_region                = "us-east-1"
 aws_account_id            = ""
@@ -11,18 +16,14 @@ metastore_id              = ""
 pricing_tier              = "ENTERPRISE"
 //In workspace context, adding account-level user to a workspace:
 existing_acct_level_users = {
-  "admin_abc@sample.com"           = ["ADMIN"],
+  "admin_abc@sample.com" = ["ADMIN"],
   "user_123@sammple.com" = ["USER"]
 }
-//
-vpc_cidr_range         = "10.28.0.0/16"
-availability_zones     = ["us-east-1a", "us-east-1b", "us-east-1c"]
-public_subnets_cidr    = ["10.28.1.0/24", "10.28.2.0/24"]
-private_subnets_cidr   = ["10.28.3.0/24", "10.28.4.0/24"]
+
+vpc_cidr_range       = "10.28.0.0/16"
+availability_zones   = ["us-east-1a", "us-east-1b", "us-east-1c"]
+public_subnets_cidr  = ["10.28.1.0/24", "10.28.2.0/24"]
+private_subnets_cidr = ["10.28.3.0/24", "10.28.4.0/24"]
+//https://docs.databricks.com/en/resources/supported-regions.html#privatelink-vpc-endpoint-services
 workspace_rest_service = "com.amazonaws.vpce.us-east-1.vpce-svc-09143d1e626de2f04"
 backend_relay          = "com.amazonaws.vpce.us-east-1.vpce-svc-00018a8c3ff62ffdf"
-// NOTE: The practice of passing credentials through Terraform is intended solely for rapid testing purposes. 
-// It should NOT be implemented in Production or any other higher-level environments.
-// For enhanced security, it is recommended to use more secure methods like AWS Secret Manager or environment-specific secrets for storing credentials.
-client_id     = ""
-client_secret = ""
