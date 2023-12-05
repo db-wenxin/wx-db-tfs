@@ -4,7 +4,7 @@ resource "time_sleep" "wait_10_seconds" {
   depends_on      = [null_resource.previous]
   create_duration = "10s"
 }
-
+// S3, IAM, Network resources
 module "aws_resources" {
   source         = "./aws_resources"
     providers = {
@@ -25,7 +25,7 @@ module "aws_resources" {
   resource_owner         = var.resource_owner
   databricks_account_id  = var.databricks_account_id
 }
-
+// DB workspace
 module "workspace_creation" {
   source                     = "./workspace_creation"
     providers = {
@@ -49,7 +49,7 @@ module "workspace_creation" {
   storage_config_bucket_name = module.aws_resources.cloud_provider_aws_dbfs_bucket_name
   depends_on                = [module.aws_resources, time_sleep.wait_10_seconds]
 }
-
+// Assign users to workspace
 module "workspace_users_assignment" {
   source = "./db_assign_account_users"
     providers = {
