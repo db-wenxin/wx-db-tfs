@@ -66,3 +66,15 @@ variable "default_catalog_name" {
   type    = string
   default = "hive_metastore"
 }
+
+variable "backend_rest" {
+  type = string
+}
+
+variable "backend_relay" {
+  type = string
+}
+
+variable "workspace_allow_public_access" {
+  type = bool
+}

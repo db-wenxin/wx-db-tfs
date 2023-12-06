@@ -109,3 +109,7 @@ variable "existing_acct_level_users" {
     // Add more users and their permissions as needed
   }
 }
+
+variable "workspace_allow_public_access" {
+  type = bool
+}

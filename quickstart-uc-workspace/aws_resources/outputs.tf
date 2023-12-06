@@ -17,3 +17,11 @@ output "cloud_provider_aws_dbfs_bucket_name" {
 output "cloud_provider_aws_cross_acct_role_arn" {
   value = aws_iam_role.cross_account_role.arn
 }
+
+output "cloud_provider_backend_relay_vpce" {
+  value = aws_vpc_endpoint.backend_relay.id
+}
+
+output "cloud_provider_backend_rest_vpce" {
+  value = aws_vpc_endpoint.backend_rest.id
+}

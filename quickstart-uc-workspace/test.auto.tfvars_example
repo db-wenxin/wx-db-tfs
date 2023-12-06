@@ -5,6 +5,7 @@ client_id     = ""
 client_secret = ""
 
 create_new_vpc            = true
+workspace_allow_public_access = true
 aws_region                = "us-east-1"
 aws_account_id            = ""
 resource_owner            = ""

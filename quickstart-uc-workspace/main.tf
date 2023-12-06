@@ -12,7 +12,7 @@ module "aws_resources" {
     aws        = aws
     databricks = databricks.mws
   }
-  create_new_vpc = var.create_new_vpc
+  create_new_vpc         = var.create_new_vpc
   aws_region             = var.aws_region
   vpc_cidr_range         = var.vpc_cidr_range
   availability_zones     = var.availability_zones
@@ -32,21 +32,24 @@ module "workspace_creation" {
     aws        = aws
     databricks = databricks.mws
   }
-  client_id                  = var.client_id
-  client_secret              = var.client_secret
-  aws_region                 = var.aws_region
-  resource_owner             = var.resource_owner
-  resource_prefix            = var.resource_prefix
-  aws_account_id             = var.aws_account_id
-  databricks_account_id      = var.databricks_account_id
-  workspace_deployment_name  = var.workspace_deployment_name
-  metastore_id               = var.metastore_id
-  cross_account_role_arn     = module.aws_resources.cloud_provider_aws_cross_acct_role_arn
-  security_group_ids         = module.aws_resources.cloud_provider_network_security_groups
-  subnet_ids                 = module.aws_resources.cloud_provider_network_subnets
-  vpc_id                     = module.aws_resources.cloud_provider_network_vpc
-  storage_config_bucket_name = module.aws_resources.cloud_provider_aws_dbfs_bucket_name
-  depends_on                 = [module.aws_resources, time_sleep.wait_10_seconds]
+  client_id                     = var.client_id
+  client_secret                 = var.client_secret
+  aws_region                    = var.aws_region
+  resource_owner                = var.resource_owner
+  resource_prefix               = var.resource_prefix
+  aws_account_id                = var.aws_account_id
+  databricks_account_id         = var.databricks_account_id
+  workspace_deployment_name     = var.workspace_deployment_name
+  metastore_id                  = var.metastore_id
+  workspace_allow_public_access = var.workspace_allow_public_access
+  cross_account_role_arn        = module.aws_resources.cloud_provider_aws_cross_acct_role_arn
+  security_group_ids            = module.aws_resources.cloud_provider_network_security_groups
+  subnet_ids                    = module.aws_resources.cloud_provider_network_subnets
+  vpc_id                        = module.aws_resources.cloud_provider_network_vpc
+  storage_config_bucket_name    = module.aws_resources.cloud_provider_aws_dbfs_bucket_name
+  backend_rest                  = module.aws_resources.cloud_provider_backend_rest_vpce
+  backend_relay                 = module.aws_resources.cloud_provider_backend_relay_vpce
+  depends_on                    = [module.aws_resources, time_sleep.wait_10_seconds]
 }
 
 // Assign users to workspace
