@@ -42,6 +42,7 @@ module "workspace_creation" {
   workspace_deployment_name     = var.workspace_deployment_name
   metastore_id                  = var.metastore_id
   workspace_allow_public_access = var.workspace_allow_public_access
+  default_catalog_name          = var.default_catalog_name
   cross_account_role_arn        = module.aws_resources.cloud_provider_aws_cross_acct_role_arn
   security_group_ids            = module.aws_resources.cloud_provider_network_security_groups
   subnet_ids                    = module.aws_resources.cloud_provider_network_subnets
