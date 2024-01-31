@@ -71,6 +71,9 @@ resource "databricks_mws_workspaces" "sample_workspace" {
   workspace_name           = var.resource_prefix
   //Workspaces using Private Link must specify the private_access_settings_id field
   private_access_settings_id = databricks_mws_private_access_settings.sample_pas.private_access_settings_id
+  custom_tags = {
+    "workspace_level_tag" = "wx_quick_launch"
+  }
 }
 
 /// 
