@@ -8,7 +8,6 @@ resource "time_sleep" "wait_15_seconds" {
 
 // Credential Configuration
 resource "databricks_mws_credentials" "credential_config" {
-  account_id       = var.databricks_account_id
   role_arn         = var.cross_account_role_arn
   credentials_name = "${var.resource_prefix}-credential"
   depends_on       = [time_sleep.wait_15_seconds]
@@ -51,7 +50,7 @@ resource "databricks_mws_networks" "network_config" {
 
 // Private Access Setting Configuration
 resource "databricks_mws_private_access_settings" "sample_pas" {
-  account_id                   = var.databricks_account_id
+  //account_id                   = var.databricks_account_id
   private_access_settings_name = "${var.resource_prefix}-pas"
   region                       = var.aws_region
   public_access_enabled        = var.workspace_allow_public_access
