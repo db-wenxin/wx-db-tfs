@@ -37,7 +37,6 @@ module "workspace_creation" {
   aws_region                    = var.aws_region
   resource_owner                = var.resource_owner
   resource_prefix               = var.resource_prefix
-  aws_account_id                = var.aws_account_id
   databricks_account_id         = var.databricks_account_id
   workspace_deployment_name     = var.workspace_deployment_name
   metastore_id                  = var.metastore_id
