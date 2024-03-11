@@ -113,3 +113,11 @@ variable "existing_acct_level_users" {
 variable "workspace_allow_public_access" {
   type = bool
 }
+variable "external_s3_bucketname" {
+  type        = string
+  description = "The S3 bucket you want to register as the new external location."
+}
+variable "external_iam_rolename" {
+  type        = string
+  description = "The IAM role name you want to give to the new IAM role created for storage credential."
+}

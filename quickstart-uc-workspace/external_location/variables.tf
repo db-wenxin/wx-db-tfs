@@ -1,6 +1,6 @@
-variable "aws_region" {
-  type = string
-}
+# variable "aws_region" {
+#   type = string
+# }
 
 variable "databricks_account_id" {
   type        = string
@@ -13,12 +13,12 @@ variable "workspace_url" {
   description = "Url of your workspace."
 }
 
-variable "pat_token" {
-  // To get a personal access token: https://docs.databricks.com/en/administration-guide/access-control/tokens.html
-  type        = string
-  description = "A personal access token for your Databricks account."
-  sensitive   = true
-}
+# variable "pat_token" {
+#   // To get a personal access token: https://docs.databricks.com/en/administration-guide/access-control/tokens.html
+#   type        = string
+#   description = "A personal access token for your Databricks account."
+#   sensitive   = true
+# }
 
 variable "s3_bucket_name" {
   type        = string
@@ -34,4 +34,14 @@ variable "s3_prefix" {
   type        = string
   description = "The S3 prefix to be used for the Databricks external location URL. If set to empty, the S3 bucket's root path will be used instead."
   default     = ""
+}
+
+variable "client_id" {
+  type      = string
+  sensitive = true
+}
+
+variable "client_secret" {
+  type      = string
+  sensitive = true
 }

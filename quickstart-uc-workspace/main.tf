@@ -65,3 +65,17 @@ module "workspace_users_assignment" {
   existing_acct_level_users = var.existing_acct_level_users
   depends_on                = [module.aws_resources, module.workspace_creation]
 }
+
+// create extenal location example
+module "exnternal_location_sample" {
+  source = "./external_location"
+  providers = {
+    databricks.mws = databricks.mws
+  }
+  client_id             = var.client_id
+  client_secret         = var.client_secret
+  workspace_url         = module.workspace_creation.workspace_url
+  databricks_account_id = var.databricks_account_id
+  s3_bucket_name        = var.external_s3_bucketname
+  iam_role_name         = var.external_iam_rolename
+}
