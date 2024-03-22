@@ -1,16 +1,7 @@
-# variable "aws_region" {
-#   type = string
-# }
-
 variable "databricks_account_id" {
   type        = string
   description = "Find your account ID at https://accounts.cloud.databricks.com"
   sensitive   = true
-}
-
-variable "workspace_url" {
-  type        = string
-  description = "Url of your workspace."
 }
 
 # variable "pat_token" {

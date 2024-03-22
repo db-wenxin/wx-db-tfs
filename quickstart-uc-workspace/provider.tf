@@ -1,8 +1,9 @@
+# Provider versions
 terraform {
   required_providers {
     databricks = {
       source  = "databricks/databricks"
-      version = "~> 1.35.0"
+      version = "~> 1.38.0"
     }
     aws = {
       source = "hashicorp/aws"
@@ -10,6 +11,7 @@ terraform {
   }
 }
 
+# AWS Provider
 provider "aws" {
   region = var.aws_region
   default_tags {
@@ -20,7 +22,8 @@ provider "aws" {
     }
   }
 }
-// Account level provider
+
+# Databricks MWS Provider
 provider "databricks" {
   alias         = "mws"
   host          = "https://accounts.cloud.databricks.com"
@@ -28,3 +31,5 @@ provider "databricks" {
   client_id     = var.client_id
   client_secret = var.client_secret
 }
+
+# The workspace provider need to be in main.tf due to the dynamic nature of host configuration
