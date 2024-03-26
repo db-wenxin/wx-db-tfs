@@ -9,20 +9,11 @@ terraform {
   }
 }
 
-# provider "aws" {
-#   region = var.aws_region
-#   default_tags {
-#     tags = {
-#       Owner     = var.resource_owner
-#       Resource  = var.resource_prefix
-#       Terraform = "Yes"
-#     }
-#   }
-# }
-
+# // Workspace-level provider 
+# // https://docs.databricks.com/en/dev-tools/terraform/index.html
 # provider "databricks" {
-#   host          = "https://accounts.cloud.databricks.com"
-#   account_id    = var.databricks_account_id
+#   alias         = "workspace"
+#   host          = var.workspace_url
 #   client_id     = var.client_id
 #   client_secret = var.client_secret
 # }

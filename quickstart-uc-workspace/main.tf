@@ -1,8 +1,10 @@
 resource "null_resource" "previous" {}
-
-resource "time_sleep" "wait_10_seconds" {
+resource "time_sleep" "wait_30_seconds" {
   depends_on      = [null_resource.previous]
-  create_duration = "10s"
+  create_duration = "30s"
+}
+locals {
+  workspace_url = module.workspace_creation.workspace_url
 }
 
 // S3, IAM, Network resources
@@ -49,7 +51,7 @@ module "workspace_creation" {
   storage_config_bucket_name    = module.aws_resources.cloud_provider_aws_dbfs_bucket_name
   backend_rest                  = module.aws_resources.cloud_provider_backend_rest_vpce
   backend_relay                 = module.aws_resources.cloud_provider_backend_relay_vpce
-  depends_on                    = [module.aws_resources, time_sleep.wait_10_seconds]
+  depends_on                    = [module.aws_resources, time_sleep.wait_30_seconds]
 }
 
 // Assign users to workspace
@@ -64,4 +66,43 @@ module "workspace_users_assignment" {
   workspace_id              = module.workspace_creation.workspace_id
   existing_acct_level_users = var.existing_acct_level_users
   depends_on                = [module.aws_resources, module.workspace_creation]
+}
+
+//
+// Initialize the workspace provider once the workspace is up and running.
+provider "databricks" {
+  alias         = "workspace"
+  host          = local.workspace_url
+  client_id     = var.client_id
+  client_secret = var.client_secret
+}
+
+// create extenal location example
+module "external_location_sample" {
+  source = "./external_location"
+  providers = {
+    aws                  = aws
+    databricks.mws       = databricks.mws
+    databricks.workspace = databricks.workspace
+  }
+  client_id             = var.client_id
+  client_secret         = var.client_secret
+  databricks_account_id = var.databricks_account_id
+  s3_bucket_name        = var.external_s3_bucketname
+  iam_role_name         = var.external_iam_rolename
+  depends_on            = [module.workspace_creation, time_sleep.wait_30_seconds]
+}
+
+// create workspace-level cluster and compute resources
+module "create_sample_cluster" {
+  source = "./workspace_compute"
+  providers = {
+    aws                  = aws
+    databricks.mws       = databricks.mws
+    databricks.workspace = databricks.workspace
+  }
+  client_id     = var.client_id
+  client_secret = var.client_secret
+  //NOTE: Without this 'depends_on' configuration, data resources such as 'databricks_spark_version' will fail during the planning stage.
+  depends_on = [module.workspace_creation, time_sleep.wait_30_seconds]
 }
