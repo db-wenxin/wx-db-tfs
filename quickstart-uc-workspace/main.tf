@@ -93,16 +93,16 @@ module "external_location_sample" {
   depends_on            = [module.workspace_creation, time_sleep.wait_30_seconds]
 }
 
-// create workspace-level cluster and compute resources
-module "create_sample_cluster" {
-  source = "./workspace_compute"
-  providers = {
-    aws                  = aws
-    databricks.mws       = databricks.mws
-    databricks.workspace = databricks.workspace
-  }
-  client_id     = var.client_id
-  client_secret = var.client_secret
-  //NOTE: Without this 'depends_on' configuration, data resources such as 'databricks_spark_version' will fail during the planning stage.
-  depends_on = [module.workspace_creation, time_sleep.wait_30_seconds]
-}
+# // create workspace-level cluster and compute resources
+# module "create_sample_cluster" {
+#   source = "./workspace_compute"
+#   providers = {
+#     aws                  = aws
+#     databricks.mws       = databricks.mws
+#     databricks.workspace = databricks.workspace
+#   }
+#   client_id     = var.client_id
+#   client_secret = var.client_secret
+#   //NOTE: Without this 'depends_on' configuration, data resources such as 'databricks_spark_version' will fail during the planning stage.
+#   depends_on = [module.workspace_creation, time_sleep.wait_30_seconds]
+# }
