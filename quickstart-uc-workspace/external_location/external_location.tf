@@ -14,8 +14,8 @@ resource "databricks_storage_credential" "external" {
   aws_iam_role {
     role_arn = aws_iam_role.external_data_access.arn
   }
-  comment = "Sample resource managed by TF2"
-  depends_on      = [time_sleep.wait_15_seconds]
+  comment    = "Sample resource managed by TF"
+  depends_on = [time_sleep.wait_15_seconds]
 }
 
 resource "databricks_external_location" "some" {

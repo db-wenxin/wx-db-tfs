@@ -60,19 +60,18 @@ resource "databricks_mws_private_access_settings" "sample_pas" {
 
 // Workspace Configuration
 resource "databricks_mws_workspaces" "sample_workspace" {
-  account_id      = var.databricks_account_id
-  aws_region      = var.aws_region
-  credentials_id  = databricks_mws_credentials.credential_config.credentials_id
-  deployment_name = var.workspace_deployment_name
-  #network_id               = databricks_mws_networks.network_config.network_id
+  account_id               = var.databricks_account_id
+  aws_region               = var.aws_region
+  credentials_id           = databricks_mws_credentials.credential_config.credentials_id
+  deployment_name          = var.workspace_deployment_name
   network_id               = databricks_mws_networks.network_config.network_id
   pricing_tier             = var.pricing_tier
   storage_configuration_id = databricks_mws_storage_configurations.storage_config.storage_configuration_id
   workspace_name           = var.resource_prefix
-  //Workspaces using Private Link must specify the private_access_settings_id field
+  # Workspaces using Private Link must specify the private_access_settings_id
   private_access_settings_id = databricks_mws_private_access_settings.sample_pas.private_access_settings_id
   custom_tags = {
-    "workspace_level_tag" = "wx_quick_launch"
+    "workspace_level_tag" = "sample_workspace_level_tag"
   }
 }
 
