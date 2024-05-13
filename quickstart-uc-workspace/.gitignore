@@ -51,3 +51,10 @@ terraform.rc
 .envrc*
 
 *.hcl
+# Others
+.metals
+.metals/*
+.vscode
+.vscode/*
+.example*
+.databricks_job_task_sample/src/local/*
