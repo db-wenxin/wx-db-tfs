@@ -34,3 +34,12 @@ override.tf.json
 .terraformrc
 terraform.rc
 *.terraform.lock.hcl
+
+# Others
+# Others
+*.metals
+*.metals/*
+*.vscode
+*.vscode/*
+*.example*
+*.databricks_job_task_sample/src/local/*
