@@ -218,7 +218,7 @@ resource "aws_iam_role_policy" "cross_account" {
           "ec2:RevokeSecurityGroupEgress",
           "ec2:RevokeSecurityGroupIngress"
         ],
-        "Resource" : "arn:aws:ec2:${var.aws_region}:${data.aws_caller_identity.current.account_id}:security-group/SECURITYGROUPID",
+        "Resource" : "arn:aws:ec2:${var.aws_region}:${data.aws_caller_identity.current.account_id}:security-group/${aws_security_group.sample_sg.id}",
         "Condition" : {
           "StringEquals" : {
             "ec2:vpc" : "arn:aws:ec2:${var.aws_region}:${data.aws_caller_identity.current.account_id}:vpc/${module.vpc.vpc_id}"

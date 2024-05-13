@@ -1,10 +1,10 @@
 data "databricks_node_type" "smallest" {
-  provider                = databricks.workspace
+  provider   = databricks.workspace
   local_disk = true
 }
 
 data "databricks_spark_version" "latest_lts" {
-  provider                = databricks.workspace
+  provider          = databricks.workspace
   long_term_support = true
 }
 
