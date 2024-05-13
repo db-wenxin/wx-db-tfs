@@ -20,22 +20,22 @@ resource "databricks_mws_storage_configurations" "storage_config" {
   storage_configuration_name = "${var.resource_prefix}-storage"
 }
 
-// Network Configuration
-// Backend REST VPC Endpoint Configuration
+# Network Configuration
+## Backend REST VPC Endpoint Configuration
 resource "databricks_mws_vpc_endpoint" "backend_rest" {
   account_id          = var.databricks_account_id
   aws_vpc_endpoint_id = var.backend_rest
   vpc_endpoint_name   = "${var.resource_prefix}-vpce-backend-${var.vpc_id}"
   region              = var.aws_region
 }
-
-// Backend Rest VPC Endpoint Configuration
+## Backend Rest VPC Endpoint Configuration
 resource "databricks_mws_vpc_endpoint" "backend_relay" {
   account_id          = var.databricks_account_id
   aws_vpc_endpoint_id = var.backend_relay
   vpc_endpoint_name   = "${var.resource_prefix}-vpce-relay-${var.vpc_id}"
   region              = var.aws_region
 }
+## Databricks Network Configuration Resource
 resource "databricks_mws_networks" "network_config" {
   account_id         = var.databricks_account_id
   network_name       = "${var.resource_prefix}-network"
@@ -48,7 +48,7 @@ resource "databricks_mws_networks" "network_config" {
   }
 }
 
-// Private Access Setting Configuration
+## Private Access Setting Configuration
 resource "databricks_mws_private_access_settings" "sample_pas" {
   account_id                   = var.databricks_account_id
   private_access_settings_name = "${var.resource_prefix}-pas"
@@ -58,7 +58,7 @@ resource "databricks_mws_private_access_settings" "sample_pas" {
   allowed_vpc_endpoint_ids     = [databricks_mws_vpc_endpoint.backend_rest.vpc_endpoint_id]
 }
 
-// Workspace Configuration
+# Workspace Configuration
 resource "databricks_mws_workspaces" "sample_workspace" {
   account_id               = var.databricks_account_id
   aws_region               = var.aws_region
