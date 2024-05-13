@@ -36,10 +36,8 @@ terraform.rc
 *.terraform.lock.hcl
 
 # Others
-# Others
-*.metals
-*.metals/*
-*.vscode
-*.vscode/*
+*.metals/
+*.vscode/
 *.example*
-*.databricks_job_task_sample/src/local/*
+*.databricks_job_task_sample/src/local/*\
+quickstart-uc-workspace/example*
