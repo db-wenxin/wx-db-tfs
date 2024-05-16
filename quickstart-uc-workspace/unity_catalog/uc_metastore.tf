@@ -1,5 +1,5 @@
-// This template create databricks metastore and related AWS resources such as IAM, S3 and KMS.
-// Unity Catalog Trust Policy
+# This template create databricks metastore and related AWS resources such as IAM, S3 and KMS.
+# Unity Catalog Trust Policy
 data "aws_caller_identity" "current" {}
 resource "null_resource" "previous" {}
 
@@ -13,7 +13,7 @@ data "aws_iam_policy_document" "passrole_for_unity_catalog" {
     effect  = "Allow"
     actions = ["sts:AssumeRole"]
     principals {
-      // https://docs.databricks.com/en/data-governance/unity-catalog/manage-external-locations-and-credentials.html
+      # https:#docs.databricks.com/en/data-governance/unity-catalog/manage-external-locations-and-credentials.html
       identifiers = ["arn:aws:iam::414351767826:role/unity-catalog-prod-UCMasterRole-14S5ZJVKOTYTL"]
       type        = "AWS"
     }
@@ -44,7 +44,7 @@ data "aws_iam_policy_document" "passrole_for_unity_catalog" {
   }
 }
 
-// Unity Catalog IAM Role
+# Unity Catalog IAM Role
 resource "aws_iam_role" "unity_catalog_role" {
   name               = "${var.resource_prefix}-unity-catalog"
   assume_role_policy = data.aws_iam_policy_document.passrole_for_unity_catalog.json
@@ -53,7 +53,7 @@ resource "aws_iam_role" "unity_catalog_role" {
   }
 }
 
-// Unity Catalog IAM Policy
+# Unity Catalog IAM Policy
 data "aws_iam_policy_document" "unity_catalog_iam_policy" {
   statement {
     effect = "Allow"
@@ -93,7 +93,7 @@ resource "aws_iam_role_policy" "unity_catalog" {
   policy = data.aws_iam_policy_document.unity_catalog_iam_policy.json
 }
 
-// Unity Catalog AWS CMK - example aws custom managed key for s3 encryption
+# Unity Catalog AWS CMK - example aws custom managed key for s3 encryption
 resource "aws_kms_key" "example_bucket_cmk" {
   description = "This is an example CMK for UC bucket encryption. Managed by TF"
   policy      = data.aws_iam_policy_document.example_bucket_cmk.json
@@ -138,10 +138,10 @@ data "aws_iam_policy_document" "example_bucket_cmk" {
 #   )
 # }
 
-// Unity Catalog S3
+# Unity Catalog S3
 resource "aws_s3_bucket" "unity_catalog_bucket" {
   bucket = var.uc_bucketname
-  // set force_destroy = true for testing purposes
+  # set force_destroy = true for testing purposes
   force_destroy = true
   tags = {
     Name = var.uc_bucketname
@@ -157,7 +157,6 @@ resource "aws_s3_bucket_versioning" "unity_catalog_versioning" {
 
 resource "aws_s3_bucket_server_side_encryption_configuration" "unity_catalog" {
   bucket = aws_s3_bucket.unity_catalog_bucket.bucket
-
   rule {
     apply_server_side_encryption_by_default {
       sse_algorithm = "AES256"
@@ -174,26 +173,28 @@ resource "aws_s3_bucket_public_access_block" "unity_catalog" {
   depends_on              = [aws_s3_bucket.unity_catalog_bucket]
 }
 
-// Metastore https://registry.terraform.io/providers/databricks/databricks/latest/docs/guides/unity-catalog
+# Metastore https:#registry.terraform.io/providers/databricks/databricks/latest/docs/guides/unity-catalog
 resource "databricks_metastore" "sample_metastore" {
-  name          = "unity-catalog-${var.resource_prefix}"
-  region        = var.aws_region
-  storage_root  = "s3://${var.uc_bucketname}/"
+  name   = "wenxin-sampleuc-${var.resource_prefix}"
+  region = var.aws_region
+  # Skip the s3 allocation so each catalog must have a storage_root
+  #storage_root  = "s3:#${var.uc_bucketname}/"
   force_destroy = true
 }
 
-// Metastore Data Access
-resource "databricks_metastore_data_access" "this" {
-  // The owner by default will be the service principal of the automation.
-  metastore_id = databricks_metastore.sample_metastore.id
-  name         = aws_iam_role.unity_catalog_role.name
-  aws_iam_role {
-    role_arn = aws_iam_role.unity_catalog_role.arn
-  }
-  is_default = true
-  depends_on = [
-    databricks_metastore.sample_metastore, aws_iam_role.unity_catalog_role, time_sleep.wait_30_seconds
-  ]
-  force_destroy = true
-  owner         = "admins"
-}
+# Metastore Data Access
+## Since we skipped the s3 allocation, this resource is not required.
+# resource "databricks_metastore_data_access" "this" {
+#   # The owner by default will be the service principal of the automation.
+#   metastore_id = databricks_metastore.sample_metastore.id
+#   name         = aws_iam_role.unity_catalog_role.name
+#   aws_iam_role {
+#     role_arn = aws_iam_role.unity_catalog_role.arn
+#   }
+#   is_default = true
+#   depends_on = [
+#     databricks_metastore.sample_metastore, aws_iam_role.unity_catalog_role, time_sleep.wait_30_seconds
+#   ]
+#   force_destroy = true
+#   owner         = "admins"
+# }

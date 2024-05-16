@@ -19,6 +19,10 @@ variable "databricks_account_admins" {
   EOT
   type        = list(string)
 }
+variable "uc_bucketname" {
+  description = "Name of the UC bucket"
+  type        = string
+}
 
 variable "unity_admin_group" {
   description = "Name of the admin group. This group will be set as the owner of the Unity Catalog metastore"

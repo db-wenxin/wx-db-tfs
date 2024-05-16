@@ -27,6 +27,22 @@ module "aws_resources" {
   databricks_account_id  = var.databricks_account_id
 }
 
+## Recommend to create UC resources in a saperated repo/pipeline.
+# Create new UC Metastore
+module "unity_catalog" {
+  source = "./unity_catalog"
+  providers = {
+    aws        = aws
+    databricks = databricks.mws
+  }
+  aws_region            = var.aws_region
+  aws_account_id        = var.aws_account_id
+  databricks_account_id = var.databricks_account_id
+  resource_prefix       = var.resource_prefix
+  resource_owner        = var.resource_owner
+  uc_bucketname         = var.uc_bucketname
+}
+
 # DB workspace
 module "workspace_creation" {
   source = "./workspace_creation"
@@ -41,7 +57,7 @@ module "workspace_creation" {
   resource_prefix               = var.resource_prefix
   databricks_account_id         = var.databricks_account_id
   workspace_deployment_name     = var.workspace_deployment_name
-  metastore_id                  = var.metastore_id
+  metastore_id                  = module.unity_catalog.metastore_id #var.metastore_id
   workspace_allow_public_access = var.workspace_allow_public_access
   default_catalog_name          = var.default_catalog_name
   cross_account_role_arn        = module.aws_resources.cloud_provider_aws_cross_acct_role_arn
@@ -97,20 +113,20 @@ module "external_location_sample" {
 }
 
 # # Create workspace-level cluster and compute resources
-# module "create_sample_cluster" {
-#   source = "./workspace_compute"
-#   providers = {
-#     aws                  = aws
-#     databricks.mws       = databricks.mws
-#     databricks.workspace = databricks.workspace
-#   }
-#   client_id     = var.client_id
-#   client_secret = var.client_secret
-#   #NOTE: Without this 'depends_on' configuration, data resources such as 'databricks_spark_version' will fail during the planning stage.
-#   depends_on = [module.workspace_creation, time_sleep.wait_30_seconds]
-# }
+module "create_sample_cluster" {
+  source = "./workspace_compute"
+  providers = {
+    aws                  = aws
+    databricks.mws       = databricks.mws
+    databricks.workspace = databricks.workspace
+  }
+  client_id     = var.client_id
+  client_secret = var.client_secret
+  #NOTE: Without this 'depends_on' configuration, data resources such as 'databricks_spark_version' will fail during the planning stage.
+  depends_on = [module.workspace_creation, time_sleep.wait_30_seconds]
+}
 
-# Create a sample static job
+# Create a sample static job with multiple tasks
 module "create_static_job" {
   providers = {
     databricks = databricks.workspace
