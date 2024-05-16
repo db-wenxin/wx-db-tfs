@@ -1,12 +1,17 @@
 data "aws_caller_identity" "current" {}
-// Create a new sample bucket for the new external location
+#Create a new sample bucket for the new external location
 resource "aws_s3_bucket" "external_location_bucket" {
-  bucket = var.s3_bucket_name
+  # Set to true non-prod env
+  force_destroy = true
+  bucket        = var.s3_bucket_name
 }
 
 resource "aws_s3_bucket_public_access_block" "external" {
-  bucket             = aws_s3_bucket.external_location_bucket.id
-  ignore_public_acls = true
+  bucket                  = aws_s3_bucket.external_location_bucket.id
+  block_public_acls       = true
+  block_public_policy     = true
+  ignore_public_acls      = true
+  restrict_public_buckets = true
 }
 
 resource "aws_s3_bucket_server_side_encryption_configuration" "ssekms" {
@@ -19,7 +24,7 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "ssekms" {
   }
 }
 
-// Create sample KMS key for external location.
+#Create sample KMS key for external location.
 resource "aws_kms_key" "sample_kms_key" {
   policy = data.aws_iam_policy_document.sample_kms_policy.json
 }
@@ -38,7 +43,7 @@ data "aws_iam_policy_document" "sample_kms_policy" {
   }
 }
 
-// Create IAM resources for external location
+#Create IAM resources for external location
 resource "aws_iam_role" "external_data_access" {
   name                = var.iam_role_name
   assume_role_policy  = data.aws_iam_policy_document.passrole_for_uc.json

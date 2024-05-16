@@ -1,19 +1,19 @@
-// Terraform Documentation: https://registry.terraform.io/providers/databricks/databricks/latest/docs/resources/mws_workspaces
-// Wait on Credential Due to Race Condition
+# Terraform Documentation: https://registry.terraform.io/providers/databricks/databricks/latest/docs/resources/mws_workspaces
+# Wait on Credential Due to Race Condition
 resource "null_resource" "previous" {}
 resource "time_sleep" "wait_15_seconds" {
   depends_on      = [null_resource.previous]
   create_duration = "15s"
 }
 
-// Credential Configuration
+# Credential Configuration
 resource "databricks_mws_credentials" "credential_config" {
+  depends_on       = [time_sleep.wait_15_seconds]
   role_arn         = var.cross_account_role_arn
   credentials_name = "${var.resource_prefix}-credential"
-  depends_on       = [time_sleep.wait_15_seconds]
 }
 
-// Storage Configuration
+# Storage Configuration
 resource "databricks_mws_storage_configurations" "storage_config" {
   account_id                 = var.databricks_account_id
   bucket_name                = var.storage_config_bucket_name
@@ -50,7 +50,6 @@ resource "databricks_mws_networks" "network_config" {
 
 ## Private Access Setting Configuration
 resource "databricks_mws_private_access_settings" "sample_pas" {
-  account_id                   = var.databricks_account_id
   private_access_settings_name = "${var.resource_prefix}-pas"
   region                       = var.aws_region
   public_access_enabled        = var.workspace_allow_public_access
@@ -75,7 +74,7 @@ resource "databricks_mws_workspaces" "sample_workspace" {
   }
 }
 
-/// 
+# Assign workspace to UC metastore 
 resource "databricks_metastore_assignment" "this" {
   metastore_id         = var.metastore_id
   workspace_id         = databricks_mws_workspaces.sample_workspace.workspace_id

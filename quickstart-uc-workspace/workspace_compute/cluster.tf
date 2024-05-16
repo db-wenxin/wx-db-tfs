@@ -8,7 +8,7 @@ data "databricks_spark_version" "latest_lts" {
   long_term_support = true
 }
 
-resource "databricks_cluster" "coldstart" {
+resource "databricks_cluster" "coldstart_sample" {
   provider                = databricks.workspace
   cluster_name            = "cluster - example"
   spark_version           = data.databricks_spark_version.latest_lts.id
