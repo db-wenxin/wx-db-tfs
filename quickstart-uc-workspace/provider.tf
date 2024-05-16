@@ -3,7 +3,7 @@ terraform {
   required_providers {
     databricks = {
       source  = "databricks/databricks"
-      version = "~> 1.38.0"
+      version = "~> 1.44.0"
     }
     aws = {
       source = "hashicorp/aws"
@@ -32,4 +32,4 @@ provider "databricks" {
   client_secret = var.client_secret
 }
 
-# The workspace provider need to be in main.tf due to the dynamic nature of host configuration
+# The workspace provider is defined in main.tf for dynamic provider configuration
