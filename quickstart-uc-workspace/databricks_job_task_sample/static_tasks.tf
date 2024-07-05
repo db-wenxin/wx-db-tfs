@@ -33,7 +33,11 @@ resource "databricks_job" "static_sample_job" {
   job_cluster {
     job_cluster_key = "multi_task_job_cluster"
     new_cluster {
-      num_workers   = 1
+      num_workers = 1
+      autoscale {
+        min_workers = 1
+        max_workers = 2
+      }
       spark_version = data.databricks_spark_version.latest.id
       node_type_id  = data.databricks_node_type.smallest.id
       aws_attributes {
