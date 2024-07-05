@@ -10,6 +10,7 @@ data "databricks_spark_version" "latest_lts" {
 
 resource "databricks_cluster" "coldstart_sample" {
   provider                = databricks.workspace
+  data_security_mode      = "SINGLE_USER"  #Required for UC cluster
   cluster_name            = "cluster - example"
   spark_version           = data.databricks_spark_version.latest_lts.id
   node_type_id            = data.databricks_node_type.smallest.id
@@ -17,9 +18,6 @@ resource "databricks_cluster" "coldstart_sample" {
   autoscale {
     min_workers = 1
     max_workers = 1
-  }
-  spark_conf = {
-    "spark.databricks.repl.allowedLanguages" : "python,sql",
   }
   spark_env_vars = {
     "Env_1"              = "value_1",
