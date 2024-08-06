@@ -78,5 +78,12 @@ resource "databricks_mws_workspaces" "sample_workspace" {
 resource "databricks_metastore_assignment" "this" {
   metastore_id         = var.metastore_id
   workspace_id         = databricks_mws_workspaces.sample_workspace.workspace_id
-  default_catalog_name = var.default_catalog_name
+  #default_catalog_name = var.default_catalog_name
+}
+
+# Use this to define default_catalog in newer provder versions
+resource "databricks_default_namespace_setting" "default_catalog" {
+  namespace {
+    value = var.default_catalog_name
+  }
 }

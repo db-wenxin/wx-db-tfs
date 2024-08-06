@@ -20,6 +20,9 @@ resource "databricks_storage_credential" "external" {
 
 resource "databricks_external_location" "some" {
   provider        = databricks.workspace
+  read_only       = true
+  skip_validation = true
+  force_destroy   = true
   name            = "external_sample"
   url             = "s3://${aws_s3_bucket.external_location_bucket.id}/${var.s3_prefix}"
   credential_name = databricks_storage_credential.external.id
