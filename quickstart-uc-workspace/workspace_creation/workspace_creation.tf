@@ -71,19 +71,14 @@ resource "databricks_mws_workspaces" "sample_workspace" {
   private_access_settings_id = databricks_mws_private_access_settings.sample_pas.private_access_settings_id
   custom_tags = {
     "workspace_level_tag" = "sample_workspace_level_tag"
+    "new_tag_test" = "new_value_zzzzzzzzz"
+    "wenxin_tag" = "asdasdasda"
+
   }
 }
 
 # Assign workspace to UC metastore 
 resource "databricks_metastore_assignment" "this" {
-  metastore_id         = var.metastore_id
-  workspace_id         = databricks_mws_workspaces.sample_workspace.workspace_id
-  #default_catalog_name = var.default_catalog_name
-}
-
-# Use this to define default_catalog in newer provder versions
-resource "databricks_default_namespace_setting" "default_catalog" {
-  namespace {
-    value = var.default_catalog_name
-  }
+  metastore_id = var.metastore_id
+  workspace_id = databricks_mws_workspaces.sample_workspace.workspace_id
 }

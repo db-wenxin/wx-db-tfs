@@ -86,7 +86,7 @@ data "aws_iam_policy_document" "passrole_for_uc" {
 
 resource "aws_iam_policy" "external_data_access" {
   path = "/"
-  name = "sample_policy_storage_credentail_role"
+  name = "${var.s3_prefix}_sample_policy_storage_credentail_role"
   policy = jsonencode({
     Version = "2012-10-17"
     Statement = [

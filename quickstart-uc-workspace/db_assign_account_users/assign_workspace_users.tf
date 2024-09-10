@@ -1,7 +1,12 @@
+resource "time_sleep" "wait_seconds" {
+  create_duration = "120s"
+}
+
 // Example of assigning existing account-level users to the workspace
 data "databricks_user" "existing_users" {
   for_each  = var.existing_acct_level_users
   user_name = each.key
+  depends_on = [ time_sleep.wait_seconds ]
 }
 
 resource "databricks_mws_permission_assignment" "add_users_to_workspace" {

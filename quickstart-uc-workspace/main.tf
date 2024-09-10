@@ -1,11 +1,16 @@
-resource "null_resource" "previous" {}
-resource "time_sleep" "wait_30_seconds" {
-  depends_on      = [null_resource.previous]
-  create_duration = "30s"
-}
 locals {
   workspace_url = module.workspace_creation.workspace_url
 }
+
+resource "null_resource" "previous" {
+  depends_on = [module.aws_resources, module.workspace_creation]
+}
+
+resource "time_sleep" "wait_30_seconds" {
+  depends_on      = [null_resource.previous]
+  create_duration = "60s"
+}
+
 
 # S3, IAM, Network resources
 module "aws_resources" {
@@ -67,10 +72,22 @@ module "workspace_creation" {
   storage_config_bucket_name    = module.aws_resources.cloud_provider_aws_dbfs_bucket_name
   backend_rest                  = module.aws_resources.cloud_provider_backend_rest_vpce
   backend_relay                 = module.aws_resources.cloud_provider_backend_relay_vpce
-  depends_on                    = [module.aws_resources, time_sleep.wait_30_seconds]
 }
 
-# Assign users to workspace
+# Initialize the workspace provider once the workspace is up and running.
+# This is one of possible ways to intilize workspace provider 
+# To declare a configuration alias within a module in order to receive an alternate provider configuration 
+#   from the parent module, add the configuration_aliases argument to that provider's required_providers entry.
+#   https://developer.hashicorp.com/terraform/language/providers/configuration
+
+provider "databricks" {
+  alias         = "workspace"
+  host          = local.workspace_url
+  client_id     = var.client_id
+  client_secret = var.client_secret
+}
+
+# # Assign users to workspace
 module "workspace_users_assignment" {
   source = "./db_assign_account_users"
   providers = {
@@ -81,22 +98,22 @@ module "workspace_users_assignment" {
   databricks_account_id     = var.databricks_account_id
   workspace_id              = module.workspace_creation.workspace_id
   existing_acct_level_users = var.existing_acct_level_users
-  depends_on                = [module.aws_resources, module.workspace_creation]
+  #depends_on                = [module.aws_resources, module.workspace_creation]
 }
 
-# Initialize the workspace provider once the workspace is up and running.
-# This is one of possible ways to intilize workspace provider 
-# To declare a configuration alias within a module in order to receive an alternate provider configuration 
-#   from the parent module, add the configuration_aliases argument to that provider's required_providers entry.
-#   https://developer.hashicorp.com/terraform/language/providers/configuration
-provider "databricks" {
-  alias         = "workspace"
-  host          = local.workspace_url
-  client_id     = var.client_id
-  client_secret = var.client_secret
+
+# Use this to define default_catalog in newer provder versions
+# This resource could be only used with workspace-level provider
+resource "databricks_default_namespace_setting" "default_catalog" {
+  #depends_on = [ module.workspace_creation ]
+  provider = databricks.workspace
+  namespace {
+    value = var.default_catalog_name
+  }
 }
 
-# Create extenal location example
+
+#Create extenal location example
 module "external_location_sample" {
   source = "./external_location"
   providers = {
@@ -109,28 +126,28 @@ module "external_location_sample" {
   databricks_account_id = var.databricks_account_id
   s3_bucket_name        = var.external_s3_bucketname
   iam_role_name         = var.external_iam_rolename
-  depends_on            = [module.workspace_creation, time_sleep.wait_30_seconds]
+  #depends_on            = [time_sleep.wait_30_seconds]
 }
 
 # Create workspace-level cluster and compute resources
-module "create_sample_cluster" {
-  source = "./workspace_compute"
-  providers = {
-    aws                  = aws
-    databricks.mws       = databricks.mws
-    databricks.workspace = databricks.workspace
-  }
-  client_id     = var.client_id
-  client_secret = var.client_secret
-  #NOTE: Without this 'depends_on' configuration, data resources such as 'databricks_spark_version' will fail during the planning stage.
-  depends_on = [module.workspace_creation, time_sleep.wait_30_seconds]
-}
+# module "create_sample_cluster" {
+#   source = "./workspace_compute"
+#   providers = {
+#     aws                  = aws
+#     databricks.mws       = databricks.mws
+#     databricks.workspace = databricks.workspace
+#   }
+#   client_id     = var.client_id
+#   client_secret = var.client_secret
+#   #NOTE: Without this 'depends_on' configuration, data resources such as 'databricks_spark_version' will fail during the planning stage.
+#   depends_on = [module.workspace_creation, time_sleep.wait_30_seconds]
+# }
 
 # Create a sample static job with multiple tasks
-module "create_static_job" {
-  providers = {
-    databricks = databricks.workspace
-  }
-  source     = "./databricks_job_task_sample"
-  depends_on = [module.workspace_creation, time_sleep.wait_30_seconds]
-}
+# module "create_static_job" {
+#   providers = {
+#     databricks = databricks.workspace
+#   }
+#   source     = "./databricks_job_task_sample"
+#   depends_on = [module.workspace_creation, time_sleep.wait_30_seconds]
+# }
