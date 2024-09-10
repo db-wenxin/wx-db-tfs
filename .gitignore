@@ -41,3 +41,5 @@ terraform.rc
 *.vscode/
 *.example*
 *.databricks_job_task_sample/src/local/*
+temp/
+temp/*
