@@ -10,7 +10,7 @@ data "databricks_spark_version" "latest_lts" {
 
 resource "databricks_cluster" "coldstart_sample" {
   provider                = databricks.workspace
-  data_security_mode      = "SINGLE_USER"  #Required for UC cluster
+  data_security_mode      = "SINGLE_USER" #Required for UC cluster
   cluster_name            = "cluster - example"
   spark_version           = data.databricks_spark_version.latest_lts.id
   node_type_id            = data.databricks_node_type.smallest.id

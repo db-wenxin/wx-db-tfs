@@ -88,3 +88,13 @@ resource "databricks_job" "static_sample_job" {
     job_cluster_key = "multi_task_job_cluster"
   }
 }
+
+
+resource "databricks_permissions" "sample_job_permission" {
+  job_id = databricks_job.static_sample_job.id
+
+  access_control {
+    group_name       = "users"  #Use 'users' to grant permissions to all workspace users
+    permission_level = "CAN_VIEW"
+  }
+}

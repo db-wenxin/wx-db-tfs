@@ -76,7 +76,6 @@ resource "databricks_mws_workspaces" "sample_workspace" {
 
 # Assign workspace to UC metastore 
 resource "databricks_metastore_assignment" "this" {
-  metastore_id         = var.metastore_id
-  workspace_id         = databricks_mws_workspaces.sample_workspace.workspace_id
-  default_catalog_name = var.default_catalog_name
+  metastore_id = var.metastore_id
+  workspace_id = databricks_mws_workspaces.sample_workspace.workspace_id
 }
