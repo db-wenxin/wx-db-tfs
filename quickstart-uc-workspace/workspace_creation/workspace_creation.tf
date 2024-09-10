@@ -71,9 +71,6 @@ resource "databricks_mws_workspaces" "sample_workspace" {
   private_access_settings_id = databricks_mws_private_access_settings.sample_pas.private_access_settings_id
   custom_tags = {
     "workspace_level_tag" = "sample_workspace_level_tag"
-    "new_tag_test" = "new_value_zzzzzzzzz"
-    "wenxin_tag" = "asdasdasda"
-
   }
 }
 
