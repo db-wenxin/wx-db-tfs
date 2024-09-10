@@ -94,7 +94,7 @@ resource "databricks_permissions" "sample_job_permission" {
   job_id = databricks_job.static_sample_job.id
 
   access_control {
-    group_name       = "users" #S ecret sauce for granting permissions to all workspace users
+    group_name       = "users"  #Use 'users' to grant permissions to all workspace users
     permission_level = "CAN_VIEW"
   }
 }
