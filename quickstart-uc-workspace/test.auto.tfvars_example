@@ -15,6 +15,7 @@ unity_admin_group         = ""
 workspace_deployment_name = ""
 metastore_id              = ""
 pricing_tier              = "ENTERPRISE"
+enable_audit_log_alerting = true
 //In workspace context, adding account-level user to a workspace:
 existing_acct_level_users = {
   "admin_abc@sample.com" = ["ADMIN"],

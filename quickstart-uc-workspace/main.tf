@@ -82,7 +82,7 @@ module "workspace_creation" {
 
 provider "databricks" {
   alias         = "workspace"
-  host          = local.workspace_url
+  host          = "https://one-env-wenxin-test-workspace.cloud.databricks.com" #local.workspace_url
   client_id     = var.client_id
   client_secret = var.client_secret
 }
@@ -105,8 +105,8 @@ module "workspace_users_assignment" {
 # Use this to define default_catalog in newer provder versions
 # This resource could be only used with workspace-level provider
 resource "databricks_default_namespace_setting" "default_catalog" {
-  #depends_on = [ module.workspace_creation ]
-  provider = databricks.workspace
+  depends_on = [module.workspace_creation]
+  provider   = databricks.workspace
   namespace {
     value = var.default_catalog_name
   }
@@ -150,4 +150,11 @@ module "external_location_sample" {
 #   }
 #   source     = "./databricks_job_task_sample"
 #   depends_on = [module.workspace_creation, time_sleep.wait_30_seconds]
+# }
+
+# module "audit_log_alerting" {
+#   source       = "./system_tables_audit_log/"
+#   count        = var.enable_audit_log_alerting ? 1 : 0
+#   providers    = { databricks = databricks.workspace }
+#   alert_emails = var.databricks_account_admins
 # }

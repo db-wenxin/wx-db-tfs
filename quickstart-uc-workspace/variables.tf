@@ -125,3 +125,8 @@ variable "external_iam_rolename" {
   type        = string
   description = "The IAM role name you want to give to the new IAM role created for storage credential."
 }
+
+variable "enable_audit_log_alerting" {
+  type        = bool
+  description = "Enable audit log alert."
+}
