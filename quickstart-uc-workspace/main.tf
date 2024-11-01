@@ -82,7 +82,7 @@ module "workspace_creation" {
 
 provider "databricks" {
   alias         = "workspace"
-  host          = "https://one-env-wenxin-test-workspace.cloud.databricks.com" #local.workspace_url
+  host          = local.workspace_url
   client_id     = var.client_id
   client_secret = var.client_secret
 }
@@ -147,7 +147,7 @@ module "external_location_sample" {
 # module "create_static_job" {
 #   providers = {
 #     databricks = databricks.workspace
-#   }
+#   } 
 #   source     = "./databricks_job_task_sample"
 #   depends_on = [module.workspace_creation, time_sleep.wait_30_seconds]
 # }
