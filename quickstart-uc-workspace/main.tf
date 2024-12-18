@@ -1,16 +1,11 @@
-locals {
-  workspace_url = module.workspace_creation.workspace_url
-}
-
 resource "null_resource" "previous" {
   depends_on = [module.aws_resources, module.workspace_creation]
 }
-
-resource "time_sleep" "wait_30_seconds" {
+#Use sleep to avoid explicit dependencies between workspace and user assignment resources.
+resource "time_sleep" "wait_90_seconds" {
   depends_on      = [null_resource.previous]
-  create_duration = "60s"
+  create_duration = "90s"
 }
-
 
 # S3, IAM, Network resources
 module "aws_resources" {
@@ -82,7 +77,7 @@ module "workspace_creation" {
 
 provider "databricks" {
   alias         = "workspace"
-  host          = local.workspace_url
+  host          = module.workspace_creation.workspace_url
   client_id     = var.client_id
   client_secret = var.client_secret
 }
@@ -113,7 +108,7 @@ resource "databricks_default_namespace_setting" "default_catalog" {
 }
 
 
-#Create extenal location example
+# Create extenal location example
 module "external_location_sample" {
   source = "./external_location"
   providers = {
