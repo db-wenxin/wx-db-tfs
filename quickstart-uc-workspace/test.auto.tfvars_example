@@ -29,3 +29,10 @@ private_subnets_cidr = ["10.28.3.0/24", "10.28.4.0/24"]
 //https://docs.databricks.com/en/resources/supported-regions.html#privatelink-vpc-endpoint-services
 workspace_rest_service = "com.amazonaws.vpce.us-east-1.vpce-svc-09143d1e626de2f04"
 backend_relay          = "com.amazonaws.vpce.us-east-1.vpce-svc-00018a8c3ff62ffdf"
+
+git_provider              = "xxx"
+git_url                   = "xxxx"
+git_branch                = "xxx"
+git_username              = "xxx"
+git_personal_access_token = "xxxx"
+git_folder_path           = "xxx"

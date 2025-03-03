@@ -2,6 +2,10 @@ resource "null_resource" "previous" {
   depends_on = [module.aws_resources, module.workspace_creation]
 }
 #Use sleep to avoid explicit dependencies between workspace and user assignment resources.
+resource "time_sleep" "wait_30_seconds" {
+  depends_on      = [null_resource.previous]
+  create_duration = "30s"
+}
 resource "time_sleep" "wait_90_seconds" {
   depends_on      = [null_resource.previous]
   create_duration = "90s"
@@ -42,7 +46,6 @@ module "aws_resources" {
 #   resource_owner        = var.resource_owner
 #   uc_bucketname         = var.uc_bucketname
 # }
-
 # DB workspace
 module "workspace_creation" {
   source = "./workspace_creation"
@@ -93,7 +96,7 @@ module "workspace_users_assignment" {
   databricks_account_id     = var.databricks_account_id
   workspace_id              = module.workspace_creation.workspace_id
   existing_acct_level_users = var.existing_acct_level_users
-  #depends_on                = [module.aws_resources, module.workspace_creation]
+  depends_on                = [time_sleep.wait_90_seconds, module.workspace_creation]
 }
 
 
@@ -121,10 +124,26 @@ module "external_location_sample" {
   databricks_account_id = var.databricks_account_id
   s3_bucket_name        = var.external_s3_bucketname
   iam_role_name         = var.external_iam_rolename
-  #depends_on            = [time_sleep.wait_30_seconds]
+  depends_on            = [time_sleep.wait_30_seconds]
+}
+# Create a workspace resource to automatically assign users' repo to the workspace
+resource "databricks_repo" "sandbox_repo" {
+  provider     = databricks.workspace
+  git_provider = var.git_provider
+  url          = var.git_url
+  branch       = var.git_branch
+  path         = var.git_folder_path
 }
 
-# Create workspace-level cluster and compute resources
+resource "databricks_git_credential" "sandbox_repo_cred" {
+  provider              = databricks.workspace
+  git_username          = var.git_username
+  git_provider          = var.git_provider
+  personal_access_token = var.git_personal_access_token
+}
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
+
+# # Create workspace-level cluster and compute resources
 # module "create_sample_cluster" {
 #   source = "./workspace_compute"
 #   providers = {
@@ -135,7 +154,7 @@ module "external_location_sample" {
 #   client_id     = var.client_id
 #   client_secret = var.client_secret
 #   #NOTE: Without this 'depends_on' configuration, data resources such as 'databricks_spark_version' will fail during the planning stage.
-#   depends_on = [module.workspace_creation, time_sleep.wait_30_seconds]
+#   depends_on = [module.workspace_creation, time_sleep.wait_90_seconds]
 # }
 
 # Create a sample static job with multiple tasks
@@ -144,7 +163,7 @@ module "external_location_sample" {
 #     databricks = databricks.workspace
 #   } 
 #   source     = "./databricks_job_task_sample"
-#   depends_on = [module.workspace_creation, time_sleep.wait_30_seconds]
+#   depends_on = [module.workspace_creation, time_sleep.wait_90_seconds]
 # }
 
 # module "audit_log_alerting" {

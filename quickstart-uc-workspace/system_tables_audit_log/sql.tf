@@ -4,12 +4,12 @@ locals {
 }
 
 resource "databricks_sql_endpoint" "this" {
-  count            = var.warehouse_id == "" ? 1 : 0
-#  warehouse_type   = "PRO"
-  name             = "System Tables serverless"
-  cluster_size     = "2X-Small"
+  count = var.warehouse_id == "" ? 1 : 0
+  #  warehouse_type   = "PRO"
+  name                      = "System Tables serverless"
+  cluster_size              = "2X-Small"
   enable_serverless_compute = true
-  auto_stop_mins   = 10
+  auto_stop_mins            = 10
 }
 
 data "databricks_sql_warehouse" "this" {
