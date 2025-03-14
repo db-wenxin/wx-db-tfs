@@ -6,9 +6,9 @@ resource "time_sleep" "wait_30_seconds" {
   depends_on      = [null_resource.previous]
   create_duration = "30s"
 }
-resource "time_sleep" "wait_90_seconds" {
+resource "time_sleep" "wait_60_seconds" {
   depends_on      = [null_resource.previous]
-  create_duration = "90s"
+  create_duration = "60s"
 }
 
 # S3, IAM, Network resources
@@ -30,7 +30,6 @@ module "aws_resources" {
   resource_owner         = var.resource_owner
   databricks_account_id  = var.databricks_account_id
 }
-
 ## Recommend to create UC resources in a saperated repo/pipeline.
 # Create new UC Metastore
 # module "unity_catalog" {
@@ -71,7 +70,6 @@ module "workspace_creation" {
   backend_rest                  = module.aws_resources.cloud_provider_backend_rest_vpce
   backend_relay                 = module.aws_resources.cloud_provider_backend_relay_vpce
 }
-
 # Initialize the workspace provider once the workspace is up and running.
 # This is one of possible ways to intilize workspace provider 
 # To declare a configuration alias within a module in order to receive an alternate provider configuration 
@@ -96,9 +94,8 @@ module "workspace_users_assignment" {
   databricks_account_id     = var.databricks_account_id
   workspace_id              = module.workspace_creation.workspace_id
   existing_acct_level_users = var.existing_acct_level_users
-  depends_on                = [time_sleep.wait_90_seconds, module.workspace_creation]
+  depends_on                = [time_sleep.wait_60_seconds, module.workspace_creation]
 }
-
 
 # Use this to define default_catalog in newer provder versions
 # This resource could be only used with workspace-level provider
@@ -109,7 +106,6 @@ resource "databricks_default_namespace_setting" "default_catalog" {
     value = var.default_catalog_name
   }
 }
-
 
 # Create extenal location example
 module "external_location_sample" {
@@ -124,24 +120,22 @@ module "external_location_sample" {
   databricks_account_id = var.databricks_account_id
   s3_bucket_name        = var.external_s3_bucketname
   iam_role_name         = var.external_iam_rolename
-  depends_on            = [time_sleep.wait_30_seconds]
+  depends_on            = [module.workspace_users_assignment, time_sleep.wait_30_seconds]
 }
 # Create a workspace resource to automatically assign users' repo to the workspace
-resource "databricks_repo" "sandbox_repo" {
-  provider     = databricks.workspace
-  git_provider = var.git_provider
-  url          = var.git_url
-  branch       = var.git_branch
-  path         = var.git_folder_path
-}
-
-resource "databricks_git_credential" "sandbox_repo_cred" {
-  provider              = databricks.workspace
-  git_username          = var.git_username
+module "default_user_repo" {
+  source = "./databricks_repo"
+  providers = {
+    databricks = databricks.workspace
+  }
   git_provider          = var.git_provider
-  personal_access_token = var.git_personal_access_token
+  git_url               = var.git_url
+  git_branch            = var.git_branch
+  git_folder_path       = var.git_folder_path
+  git_username          = var.git_username
+  git_personal_access_token = var.git_personal_access_token
+  depends_on            = [module.workspace_users_assignment, time_sleep.wait_30_seconds]
 }
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
 
 # # Create workspace-level cluster and compute resources
 # module "create_sample_cluster" {
@@ -154,7 +148,7 @@ resource "databricks_git_credential" "sandbox_repo_cred" {
 #   client_id     = var.client_id
 #   client_secret = var.client_secret
 #   #NOTE: Without this 'depends_on' configuration, data resources such as 'databricks_spark_version' will fail during the planning stage.
-#   depends_on = [module.workspace_creation, time_sleep.wait_90_seconds]
+#   depends_on = [module.workspace_creation, time_sleep.wait_60_seconds]
 # }
 
 # Create a sample static job with multiple tasks
@@ -163,7 +157,7 @@ resource "databricks_git_credential" "sandbox_repo_cred" {
 #     databricks = databricks.workspace
 #   } 
 #   source     = "./databricks_job_task_sample"
-#   depends_on = [module.workspace_creation, time_sleep.wait_90_seconds]
+#   depends_on = [module.workspace_creation, time_sleep.wait_60_seconds]
 # }
 
 # module "audit_log_alerting" {
