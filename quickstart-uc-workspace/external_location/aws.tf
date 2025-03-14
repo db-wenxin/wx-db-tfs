@@ -46,43 +46,49 @@ data "aws_iam_policy_document" "sample_kms_policy" {
 #Create IAM resources for external location
 resource "aws_iam_role" "external_data_access" {
   name                = var.iam_role_name
-  assume_role_policy  = data.aws_iam_policy_document.passrole_for_uc.json
+  assume_role_policy  = data.databricks_aws_unity_catalog_assume_role_policy.passrole_for_uc.json #data.aws_iam_policy_document.passrole_for_uc.json
   managed_policy_arns = [aws_iam_policy.external_data_access.arn]
 }
 
-data "aws_iam_policy_document" "passrole_for_uc" {
-  statement {
-    effect  = "Allow"
-    actions = ["sts:AssumeRole"]
-    principals {
-      identifiers = ["arn:aws:iam::414351767826:role/unity-catalog-prod-UCMasterRole-14S5ZJVKOTYTL"]
-      type        = "AWS"
-    }
-    condition {
-      test     = "StringEquals"
-      variable = "sts:ExternalId"
-      values   = [var.databricks_account_id]
-    }
-  }
-  statement {
-    effect  = "Allow"
-    actions = ["sts:AssumeRole"]
-    principals {
-      identifiers = ["*"]
-      type        = "AWS"
-    }
-    condition {
-      test     = "StringEquals"
-      variable = "sts:ExternalId"
-      values   = [var.databricks_account_id]
-    }
-    condition {
-      test     = "StringEquals"
-      variable = "aws:PrincipalArn"
-      values   = ["arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/${var.iam_role_name}"]
-    }
-  }
+data "databricks_aws_unity_catalog_assume_role_policy" "passrole_for_uc" {
+  aws_account_id = data.aws_caller_identity.current.account_id
+  role_name      = var.iam_role_name
+  external_id    = var.databricks_account_id
 }
+
+# data "aws_iam_policy_document" "passrole_for_uc" {
+#   statement {
+#     effect  = "Allow"
+#     actions = ["sts:AssumeRole"]
+#     principals {
+#       identifiers = ["arn:aws:iam::414351767826:role/unity-catalog-prod-UCMasterRole-14S5ZJVKOTYTL"]
+#       type        = "AWS"
+#     }
+#     condition {
+#       test     = "StringEquals"
+#       variable = "sts:ExternalId"
+#       values   = [var.databricks_account_id]
+#     }
+#   }
+#   statement {
+#     effect  = "Allow"
+#     actions = ["sts:AssumeRole"]
+#     principals {
+#       identifiers = ["*"]
+#       type        = "AWS"
+#     }
+#     condition {
+#       test     = "StringEquals"
+#       variable = "sts:ExternalId"
+#       values   = [var.databricks_account_id]
+#     }
+#     condition {
+#       test     = "StringEquals"
+#       variable = "aws:PrincipalArn"
+#       values   = ["arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/${var.iam_role_name}"]
+#     }
+#   }
+# }
 
 resource "aws_iam_policy" "external_data_access" {
   path = "/"

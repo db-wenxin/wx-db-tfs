@@ -1,8 +1,8 @@
 // Wait on Credential Due to Race Condition
 resource "null_resource" "previous" {}
-resource "time_sleep" "wait_120_seconds" {
+resource "time_sleep" "wait_30_seconds" {
   depends_on      = [null_resource.previous]
-  create_duration = "120s"
+  create_duration = "30s"
 }
 
 #################################################################################
@@ -15,7 +15,7 @@ resource "databricks_storage_credential" "external" {
     role_arn = aws_iam_role.external_data_access.arn
   }
   comment    = "Sample resource managed by TF"
-  depends_on = [time_sleep.wait_120_seconds]
+  depends_on = [time_sleep.wait_30_seconds]
 }
 
 resource "databricks_grant" "storage_credential_sample_permission" {
@@ -34,7 +34,7 @@ resource "databricks_external_location" "some" {
   url             = "s3://${aws_s3_bucket.external_location_bucket.id}/${var.s3_prefix}"
   credential_name = databricks_storage_credential.external.id
   comment         = "Sample resource managed by TF"
-  depends_on      = [time_sleep.wait_120_seconds, databricks_storage_credential.external]
+  depends_on      = [time_sleep.wait_30_seconds, databricks_storage_credential.external]
 }
 
 resource "databricks_grant" "ext_location_sample_permission" {
