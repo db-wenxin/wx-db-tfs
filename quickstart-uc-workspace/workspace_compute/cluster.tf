@@ -26,6 +26,6 @@ resource "databricks_cluster" "coldstart_sample" {
   }
   custom_tags = {
     "example_tag" = "sample_tag"
-    "tester"      = "wenxin"
+    "tester"      = "tester_name_example"
   }
 }
