@@ -28,5 +28,4 @@ provider "databricks" {
   host          = module.workspace_creation.workspace_url
   client_id     = var.client_id
   client_secret = var.client_secret
-
 }

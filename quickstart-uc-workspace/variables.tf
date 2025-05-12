@@ -212,71 +212,71 @@ variable "dev_create_external_location" {
 }
 
 # # ----  Prod workspace specific variables  ---- #
-# variable "prod_default_catalog_name" {
-#   type        = string
-#   description = "Default catalog name"
-# }
+variable "prod_default_catalog_name" {
+  type        = string
+  description = "Default catalog name"
+}
 
-# variable "prod_workspace_url" {
-#   type        = string
-#   description = "URL of the Prod workspace (leave empty for new workspaces, set after first run)"
-#   default     = ""
-# }
+variable "prod_workspace_url" {
+  type        = string
+  description = "URL of the Prod workspace (leave empty for new workspaces, set after first run)"
+  default     = ""
+}
 
-# variable "prod_resource_prefix" {
-#   type        = string
-#   description = "Resource prefix for Prod workspace"
-# }
+variable "prod_resource_prefix" {
+  type        = string
+  description = "Resource prefix for Prod workspace"
+}
 
-# variable "prod_workspace_deployment_name" {
-#   type        = string
-#   description = "Deployment name for Prod workspace"
-# }
+variable "prod_workspace_deployment_name" {
+  type        = string
+  description = "Deployment name for Prod workspace"
+}
 
-# variable "prod_vpc_cidr_range" {
-#   type        = string
-#   description = "CIDR range for Prod VPC"
-#   default     = "10.3.0.0/16"
-# }
+variable "prod_vpc_cidr_range" {
+  type        = string
+  description = "CIDR range for Prod VPC"
+  default     = "10.3.0.0/16"
+}
 
-# variable "prod_public_subnets_cidr" {
-#   type        = list(string)
-#   description = "CIDR blocks for Prod public subnets"
-#   default     = ["10.3.1.0/24", "10.3.2.0/24", "10.3.3.0/24"]
-# }
+variable "prod_public_subnets_cidr" {
+  type        = list(string)
+  description = "CIDR blocks for Prod public subnets"
+  default     = ["10.3.1.0/24", "10.3.2.0/24", "10.3.3.0/24"]
+}
 
-# variable "prod_private_subnets_cidr" {
-#   type        = list(string)
-#   description = "CIDR blocks for Prod private subnets"
-#   default     = ["10.3.4.0/24", "10.3.5.0/24", "10.3.6.0/24"]
-# }
+variable "prod_private_subnets_cidr" {
+  type        = list(string)
+  description = "CIDR blocks for Prod private subnets"
+  default     = ["10.3.4.0/24", "10.3.5.0/24", "10.3.6.0/24"]
+}
 
-# variable "prod_workspace_allow_public_access" {
-#   type        = bool
-#   description = "Whether to allow public access to the Prod workspace"
-#   default     = true
-# }
+variable "prod_workspace_allow_public_access" {
+  type        = bool
+  description = "Whether to allow public access to the Prod workspace"
+  default     = true
+}
 
-# variable "prod_pricing_tier" {
-#   type        = string
-#   description = "Pricing tier for Prod workspace"
-#   default     = "ENTERPRISE"
-# }
+variable "prod_pricing_tier" {
+  type        = string
+  description = "Pricing tier for Prod workspace"
+  default     = "ENTERPRISE"
+}
 
-# variable "prod_external_s3_bucketname" {
-#   type        = string
-#   description = "S3 bucket for Prod external location"
-#   default     = ""
-# }
+variable "prod_external_s3_bucketname" {
+  type        = string
+  description = "S3 bucket for Prod external location"
+  default     = ""
+}
 
-# variable "prod_external_iam_rolename" {
-#   type        = string
-#   description = "IAM role for Prod external location"
-#   default     = ""
-# }
+variable "prod_external_iam_rolename" {
+  type        = string
+  description = "IAM role for Prod external location"
+  default     = ""
+}
 
-# variable "prod_git_folder_path" {
-#   type        = string
-#   description = "Git folder path for Prod workspace"
-#   default     = "/Repos/github/prod-sandbox"
-# }
+variable "prod_git_folder_path" {
+  type        = string
+  description = "Git folder path for Prod workspace"
+  default     = "/Repos/github/prod-sandbox"
+}
