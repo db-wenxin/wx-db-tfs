@@ -47,7 +47,7 @@ module "databricks_workspace_dev" {
   external_iam_rolename  = var.dev_external_iam_rolename
 
   # Git repository
-  create_default_repo       = true
+  create_default_repo       = var.create_default_repo
   git_provider              = var.git_provider
   git_url                   = var.git_url
   git_branch                = var.git_branch
@@ -109,7 +109,7 @@ module "databricks_workspace_prod" {
   external_iam_rolename  = var.prod_external_iam_rolename
 
   # Git repository
-  create_default_repo       = true
+  create_default_repo       = var.create_default_repo
   git_provider              = var.git_provider
   git_url                   = var.git_url
   git_branch                = var.git_branch

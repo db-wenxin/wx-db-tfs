@@ -1,20 +1,24 @@
+/**
+ * Main provider configuration for Databricks Serverless Workspace
+ */
+
 terraform {
   required_providers {
     databricks = {
       source  = "databricks/databricks"
-      version = ">=1.70.0"
+      version = ">=1.77.0"
     }
     aws = {
       source  = "hashicorp/aws"
-      version = ">=4.0.0"
+      version = ">=5.0.0"
     }
     time = {
       source  = "hashicorp/time"
-      version = ">=0.7.0"
+      version = ">=0.9.0"
     }
     null = {
       source  = "hashicorp/null"
-      version = ">=3.1.0"
+      version = ">=3.2.0"
     }
   }
   required_version = ">=1.0.0"

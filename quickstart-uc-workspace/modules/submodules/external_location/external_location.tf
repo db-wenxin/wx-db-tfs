@@ -10,7 +10,9 @@ resource "time_sleep" "wait_30_seconds" {
 ##################################################################################
 resource "databricks_storage_credential" "external" {
   provider = databricks.workspace
-  name     = aws_iam_role.external_data_access.name
+  force_destroy = true
+  force_update  = true
+  name     = "${var.s3_prefix}-${aws_iam_role.external_data_access.name}"
   aws_iam_role {
     role_arn = aws_iam_role.external_data_access.arn
   }

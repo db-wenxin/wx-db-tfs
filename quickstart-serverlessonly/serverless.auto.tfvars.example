@@ -1,0 +1,66 @@
+# Resource Configuration
+resource_owner  = "your-email@example.com"
+resource_prefix = "serverless-workspace"
+workspace_deployment_name     = "serverless-workspace-demo"
+create_network_config = false
+existing_acct_level_users = {
+  "admin1@example.com" = ["ADMIN"],
+  "admin2@example.com" = ["ADMIN"],
+  "user1@example.com"  = ["USER"]
+}
+
+/**
+ * Example variables file for Databricks Serverless Workspace
+ * 
+ * NOTE: The practice of passing credentials through Terraform is intended solely for rapid testing purposes. 
+ * It should NOT be implemented in Production or any other higher-level environments.
+ * For enhanced security, it is recommended to use more secure methods like AWS Secret Manager 
+ * or environment-specific secrets for storing credentials.
+ */
+
+# Databricks Authentication
+databricks_account_id = "your-databricks-account-id"
+client_id             = "your-client-id"
+client_secret         = "your-client-secret"
+# AWS Configuration
+aws_region     = "us-east-1"
+aws_account_id = "your-aws-account-id"
+
+# Workspace Configuration
+pricing_tier                  = "ENTERPRISE"
+
+# Network Configuration - Choose one of the following options:
+
+# Option 1: No Network Configuration
+# create_network_config = false
+
+# Option 2: With PrivateLink Setup (Default)
+create_network_config = true
+vpc_cidr_range        = "10.4.0.0/16"
+availability_zones    = ["us-east-1a", "us-east-1b", "us-east-1c"]
+public_subnets_cidr   = ["10.4.1.0/24", "10.4.2.0/24"]
+private_subnets_cidr  = ["10.4.3.0/24", "10.4.4.0/24", "10.4.5.0/24"]
+
+# Region-specific VPC endpoint services (for us-east-1)
+workspace_rest_service = "com.amazonaws.vpce.us-east-1.vpce-svc-09143d1e626de2f04"
+backend_relay          = "com.amazonaws.vpce.us-east-1.vpce-svc-00018a8c3ff62ffdf"
+
+# Unity Catalog Configuration
+metastore_id          = "your-metastore-id"
+
+# User Configuration
+# Add existing account-level users to the workspace
+existing_acct_level_users = {
+  "admin1@example.com" = ["ADMIN"],
+  "admin2@example.com" = ["ADMIN"],
+  "user1@example.com"  = ["USER"]
+}
+
+# Git Repository Configuration
+create_default_repo       = true
+git_provider              = "gitHub"
+git_url                   = "https://github.com/your-org/your-repo"
+git_branch                = "main"
+git_folder_path           = "/Repos/github/serverless-sandbox"
+git_username              = "your-git-username"
+git_personal_access_token = "your-git-token" 

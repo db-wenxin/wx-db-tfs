@@ -21,6 +21,11 @@ variable "resource_prefix" {
   description = "Prefix for resource names"
   default     = ""
 }
+variable "create_default_repo" {
+  type        = bool
+  description = "Whether to create a default repo"
+  default     = true
+}
 
 # Databricks authentication
 variable "databricks_account_id" {
@@ -211,7 +216,7 @@ variable "dev_create_external_location" {
   default     = false
 }
 
-# ----  Prod workspace specific variables  ---- #
+# # ----  Prod workspace specific variables  ---- #
 variable "prod_default_catalog_name" {
   type        = string
   description = "Default catalog name"

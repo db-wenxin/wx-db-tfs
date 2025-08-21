@@ -26,21 +26,6 @@ databricks_workspace_full_creation
 ├── External Locations
 └── Git Repository Configuration
 ```
-
-### Solving the Provider Configuration Challenge
-Databricks Terraform deployments face a fundamental challenge:
-
-1. To create workspace-level resources (sqlwarehouse; catalog; external location), you need a workspace-level provider
-2. The workspace-level provider needs the workspace URL --> **But** the workspace URL is only known after the workspace is created
-This creates a circular dependency that can't be resolved with typical Terraform approaches.
-
-Our solution uses a two-phase approach:
-1. **Phase 1**: Create the workspace using the root account-level provider
-2. **Update**: Add the workspace URL to the Terraform variables after the first run
-3. **Phase 2**: The module uses its internal provider configuration to create workspace-level resources
-
-This approach eliminates the need for complex `for_each` loops and locals maps that typically can't work with provider configurations.
-
 ### Why Not Use `for_each` with Locals?
 A common pattern in Terraform is to use locals with `for_each` to create multiple similar resources. However, this approach fails with Databricks workspaces because:
 
@@ -53,43 +38,6 @@ Our approach resolves these issues by:
 2. Managing provider configuration within the module
 3. Using a two-phase deployment with workspace URL variable updates between phases
 
-## Usage
-
-### Initial Setup
-1. **Clone the repository**
-   ```bash
-   git clone <repository-url>
-   cd databricks-multi-workspace
-   ```
-
-2. **Configure Variables**
-   - Copy `test.auto.tfvars_example` to `terraform.auto.tfvars`
-   - Update the variable values to match your environment
-
-3. **Initialize Terraform**
-   ```bash
-   terraform init
-   ```
-
-4. **Deploy Phase 1: Create Workspaces**
-   ```bash
-   terraform validate && terraform plan
-   terraform apply
-   ```
-
-### Adding a New Workspace
-To add a new workspace (e.g., Staging):
-
-1. Add new variables in `variables.tf` with a  new (eg: `staging_`) prefix
-2. Add a new module call in `main.tf`:
-   ```hcl
-   module "databricks_workspace_staging" {
-     source = "./modules/databricks_workspace_full_creation"
-     # ... configuration for staging workspace
-   }
-   ```
-3. Add outputs in `outputs.tf`
-4. Update your `terraform.auto.tfvars` with the staging configuration
 
 ## Module Structure
 - **main.tf**: Contains the core workspace module calls
