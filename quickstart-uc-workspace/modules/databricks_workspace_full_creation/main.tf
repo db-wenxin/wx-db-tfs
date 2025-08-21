@@ -87,15 +87,15 @@ resource "time_sleep" "wait_before_workspace_resources" {
   create_duration = "30s"
 }
 
-# Set default catalog
-resource "databricks_default_namespace_setting" "default_catalog" {
-  provider = databricks.workspace
-  namespace {
-    value = var.default_catalog_name
-  }
+# # Set default catalog
+# resource "databricks_default_namespace_setting" "default_catalog" {
+#   provider = databricks.workspace
+#   namespace {
+#     value = var.default_catalog_name
+#   }
 
-  depends_on = [time_sleep.wait_before_workspace_resources]
-}
+#   depends_on = [time_sleep.wait_before_workspace_resources]
+# }
 
 # Create external location if enabled
 module "external_location_sample" {
@@ -110,6 +110,7 @@ module "external_location_sample" {
   client_id             = var.client_id
   client_secret         = var.client_secret
   databricks_account_id = var.databricks_account_id
+  resource_prefix       = var.resource_prefix
   s3_bucket_name        = var.external_s3_bucketname
   iam_role_name         = var.external_iam_rolename
   s3_prefix             = var.resource_prefix

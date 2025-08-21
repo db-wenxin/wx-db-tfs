@@ -11,6 +11,11 @@ variable "databricks_account_id" {
 #   sensitive   = true
 # }
 
+variable "resource_prefix" {
+  type        = string
+  description = "Prefix for resource names to ensure uniqueness"
+}
+
 variable "s3_bucket_name" {
   type        = string
   description = "The S3 bucket you want to register as the new external location."

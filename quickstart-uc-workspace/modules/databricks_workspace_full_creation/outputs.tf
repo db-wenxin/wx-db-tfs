@@ -53,6 +53,6 @@ output "workspace_deployment_complete" {
   depends_on = [
     module.workspace_creation,
     module.workspace_users_assignment,
-    databricks_default_namespace_setting.default_catalog
+    #databricks_default_namespace_setting.default_catalog
   ]
 }

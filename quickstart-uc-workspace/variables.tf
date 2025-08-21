@@ -21,6 +21,11 @@ variable "resource_prefix" {
   description = "Prefix for resource names"
   default     = ""
 }
+variable "create_default_repo" {
+  type        = bool
+  description = "Whether to create a default repo"
+  default     = true
+}
 
 # Databricks authentication
 variable "databricks_account_id" {
