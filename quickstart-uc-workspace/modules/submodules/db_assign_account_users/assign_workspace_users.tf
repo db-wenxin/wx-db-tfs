@@ -1,5 +1,5 @@
 resource "time_sleep" "wait_seconds" {
-  create_duration = "120s"
+  create_duration = "90s"
 }
 
 // Example of assigning existing account-level users to the workspace

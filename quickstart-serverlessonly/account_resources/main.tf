@@ -168,7 +168,10 @@ resource "databricks_mws_workspaces" "serverless_workspace" {
   # Optional workspace settings
   aws_region   = var.aws_region
   pricing_tier = var.pricing_tier
-
+  custom_tags = {
+    "workspace_level_tag" = "sample_workspace_level_tag"
+    Owner = var.resource_owner
+  }
   # Per documentation, for no public IP, use network security
   depends_on = [
     databricks_mws_networks.serverless_network

@@ -70,7 +70,8 @@ resource "databricks_mws_workspaces" "sample_workspace" {
   # Workspaces using Private Link must specify the private_access_settings_id
   private_access_settings_id = databricks_mws_private_access_settings.sample_pas.private_access_settings_id
   custom_tags = {
-    "workspace_level_tag" = "sample_workspace_level_tag"
+    #"workspace_level_tag" = "sample_workspace_level_tag"
+    Owner = var.resource_owner
   }
 }
 
