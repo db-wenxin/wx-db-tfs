@@ -58,12 +58,13 @@ resource "aws_iam_role" "external_data_access" {
           "Effect" : "Allow"
           "Action" : [
             "s3:GetObject",
-            "s3:GetObjectVersion",
             "s3:PutObject",
-            "s3:PutObjectAcl",
             "s3:DeleteObject",
             "s3:ListBucket",
-            "s3:GetBucketLocation"
+            "s3:GetBucketLocation",
+            "s3:ListBucketMultipartUploads",
+            "s3:ListMultipartUploadParts",
+            "s3:AbortMultipartUpload"
           ],
           "Resource" : [
             "arn:aws:s3:::${var.s3_prefix}-${var.s3_bucket_name}",
