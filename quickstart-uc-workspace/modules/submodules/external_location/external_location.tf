@@ -9,10 +9,10 @@ resource "time_sleep" "wait_30_seconds" {
 # The Owner of following resources will be SP instead of indivudual account user #
 ##################################################################################
 resource "databricks_storage_credential" "external" {
-  provider = databricks.workspace
+  provider      = databricks.workspace
   force_destroy = true
   force_update  = true
-  name     = "${var.s3_prefix}-${aws_iam_role.external_data_access.name}"
+  name          = "${var.s3_prefix}-${aws_iam_role.external_data_access.name}"
   aws_iam_role {
     role_arn = aws_iam_role.external_data_access.arn
   }
