@@ -27,7 +27,7 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "ssekms" {
 #Create sample KMS key for external location.
 resource "aws_kms_key" "sample_kms_key" {
   description = "KMS key for ${var.s3_prefix} external location"
-  policy = data.aws_iam_policy_document.sample_kms_policy.json
+  policy      = data.aws_iam_policy_document.sample_kms_policy.json
 }
 
 data "aws_iam_policy_document" "sample_kms_policy" {
@@ -48,7 +48,7 @@ data "aws_iam_policy_document" "sample_kms_policy" {
 resource "aws_iam_role" "external_data_access" {
   name               = "${var.s3_prefix}-${var.iam_role_name}"
   assume_role_policy = data.databricks_aws_unity_catalog_assume_role_policy.passrole_for_uc.json
-  
+
   inline_policy {
     name = "${var.s3_prefix}_sample_policy_storage_credentail_role"
     policy = jsonencode({

@@ -48,6 +48,7 @@ resource "databricks_mws_networks" "network_config" {
   }
 }
 
+
 ## Private Access Setting Configuration
 resource "databricks_mws_private_access_settings" "sample_pas" {
   private_access_settings_name = "${var.resource_prefix}-pas"
